@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>GPSLogger</title>
+  </head>
+  <body>
+    <h1>GPS Logger</h1>
+    <p> IP address: <input id="IPAddr" value="192.168.4.1" type="text"/>
+      <button onclick="initWebSocket();">Connect</button> <span id="connStat">Deconnecté</span>
+    </p>
+    <table><tr>
+        <td>Version: </td><td><span id="version"></span></td>
+        <td>Chipset: </td><td><span id="chipset"></span></td>
+    </tr></table>
+    <p>GPS status<br>
+      <textarea id="gpsTextArea" style="width:80%;height:150px;" wrap="soft" readonly="readonly"></textarea></p>
+    <p>Control:<br />
+        <button name="stop" onclick="sendMessage('stop');">Stop</button>&nbsp; &nbsp; 
+        <button name="reset" onclick="sendMessage('reset');">Reset</button></p>
+
+<!-- ******** JAVASCRIPT PART ************ -->
+    <script type="text/javascript">
+            function sendMessage(msg) {
+                if ( websocket != null )
+                {
+                    websocket.send( msg );
+                    console.log( "string sent :", msg);
+                }
+            }
+            function sendMessage(command, param) {
+                if ( websocket != null )
+                {
+                    websocket.send( command+" "+param );
+                    console.log( "string sent :", command, param );
+                }
+            }
+            //var wsUri = "ws://localhost:1215";
+            var websocket = null;
+
+            function initWebSocket() {
+              //document.getElementById("debugTextArea").value = "azeazeaz";
+                try {
+                    if (typeof MozWebSocket == 'function')
+                        WebSocket = MozWebSocket;
+                    if ( websocket && websocket.readyState == 1 )
+                    {
+                        stopWebSocket();
+                        return;
+                    }
+                    var wsUri = "ws://"+document.getElementById("IPAddr").value+":1215";
+                    console.log( "connecting to "+wsUri);
+                    websocket = new WebSocket(wsUri);
+                    websocket.onopen = function (evt) {
+                        console.log("Connected to server");
+                        document.getElementById("connStat").textContent="CONNECTED";
+                    };
+                    websocket.onclose = function (evt) {
+                        console.log("Disconnected from server");
+                        document.getElementById("connStat").textContent="DISCONNECTED";
+                    };
+                    websocket.onmessage = function (evt) {
+                        if(typeof evt.data == "string"){
+                            var res = evt.data.split(" ");
+                            if(res[0]=="version")document.getElementById("version").textContent=res[1];
+                            else if(res[0]=="chipset")document.getElementById("chipset").textContent=res[1];
+                            else if(res[0]=="GpsData:")document.getElementById("gpsTextArea").value=evt.data;
+                        }
+                    };
+                    websocket.onerror = function (evt) {
+						document.getElementById("connStat").text="ERREUR";
+                    };
+                } catch (exception) {
+                    document.getElementById("connStat").text="ERREUR";
+                }
+            }
+
+            function stopWebSocket() {
+                if (websocket){
+                      websocket.close();
+                      document.getElementById("connStat").textContent="DISCONNECTED";
+                      document.getElementById("chipset").textContent=""
+                      document.getElementById("version").textContent=""
+                      document.getElementById("gpsTextArea").value="";
+                }
+            }
+
+            function checkSocket() {
+                if (websocket != null) {
+                    var stateStr;
+                    switch (websocket.readyState) {
+                        case 0: {
+                            stateStr = "CONNECTING";
+                            break;
+                        }
+                        case 1: {
+                            stateStr = "OPEN";
+                            break;
+                        }
+                        case 2: {
+                            stateStr = "CLOSING";
+                            break;
+                        }
+                        case 3: {
+                            stateStr = "CLOSED";
+                            break;
+                        }
+                        default: {
+                            stateStr = "UNKNOW";
+                            break;
+                        }
+                    }
+                    document.getElementById("connStat").textContent=stateStr;
+                } else {
+                    document.getElementById("connStat").textContent="DISCONNECTED";
+                }
+            }
+        </script>
+  </body>
+</html>
