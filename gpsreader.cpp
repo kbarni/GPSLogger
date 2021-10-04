@@ -7,6 +7,11 @@
 #include <QThread>
 #include <time.h>
 
+/* ToDo:
+ - More robust GPS port detection
+ - Decode NMEA position after fix for monitoring
+*/
+
 GPSReader::GPSReader(QObject *parent) :
     QObject(parent)
 {
@@ -137,8 +142,8 @@ void GPSReader::decodeMessage(QByteArray ba)
             hr = (uchar)ba.at(22);
             mn = (uchar)ba.at(23);
             qDebug()<<"  --> Timestamp good! Current UTC time: "<<hr<<":"<<mn;
-            filename = QString("trk_%1%2%3_%4%5").arg(yr,2,10,QChar('0')).arg(mo,2,10,QChar('0')).arg(dy,2,10,QChar('0')).arg(hr,2,10,QChar('0')).arg(mn,2,10,QChar('0'));
-            glogfile.setFileName(filename);
+            filename = QString("trk_%1%2%3_%4%5.ubx").arg(yr,2,10,QChar('0')).arg(mo,2,10,QChar('0')).arg(dy,2,10,QChar('0')).arg(hr,2,10,QChar('0')).arg(mn,2,10,QChar('0'));
+            glogfile.setFileName(path+filename);
             glogfile.open(QFile::OpenModeFlag::WriteOnly);
             qDebug()<<"Opening file "<<filename;
             if(!glogfile.isOpen())
