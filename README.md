@@ -29,13 +29,17 @@ For full functionality build the webserver and enable the provided systemd servi
 
 ## PPK correction using RTKLIB command line utilities
 
-The correction is made automatically using the provided `correct.sh` utility.
+The correction is made automatically using the provided `correct.sh`/`correct.ps1` utility.
 
 It needs the `convbin` and `rnx2rtkp` utilities from RTKLib in the current folder.
 
-Useage:
+Useage (Linux/Mac):
 
     ./correct.sh [inputfile.ubx] [base.21o]
+
+Useage (Windows PowerShell):
+
+    ./correct.ps1 [inputfile.ubx] [base.21o]
 
 The base station data (`[base.21o]` and `[base.21n]`) can be downloaded in France from the [IGN France](rgp.ign.fr/DONNEES/diffusion/) site.
 

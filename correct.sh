@@ -2,6 +2,7 @@
 
 if test "$#" -ne 2; then
     echo "Useage: ./convert.sh file.ubx base.21n"
+    exit
 fi
 
 ubxfile="$1"
