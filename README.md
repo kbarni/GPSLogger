@@ -10,10 +10,7 @@ Typical application would be to connect a Raspberry Pi Zero W or similar to the 
 
 - Logging of RAW GPS data
 - Web server for live monitoring 
-
-Planned features:
-
-- integrate RAW to RINEX conversion using RTKLIB.
+- Converting the recorded raw data to csv file
 
 ## Prerequisites
 
@@ -32,12 +29,24 @@ For full functionality build the webserver and enable the provided systemd servi
 
 ## PPK correction using RTKLIB command line utilities
 
+The correction is made automatically using the provided `correct.sh` utility.
+
+It needs the `convbin` and `rnx2rtkp` utilities from RTKLib in the current folder.
+
+Useage:
+
+    ./correct.sh [inputfile.ubx] [base.21o]
+
+The base station data (`[base.21o]` and `[base.21n]`) can be downloaded in France from the [IGN France](rgp.ign.fr/DONNEES/diffusion/) site.
+
+### Manual PPK correction
+
 **RAW to RINEX conversion:**
 
-    convbin [inputfile.raw] -r ubx -o [outfile.obs]
+    convbin -r ubx -o [outfile.obs] [inputfile.ubx]
 
 **PPK correction:**
 
-Use the `rtkpost` (or `rtkpost_qt`) utility from RTKLib, and use the settings from the provided `rtkpost_gpslogger.conf` file.
-
-Download the base station data from [IGN France](rgp.ign.fr/DONNEES/diffusion/) site, load the previously created rover `obs`, the base station `.21o` and `.21n` files and run *Execute*
+    rnx2rtk -k rtkpost.conf -o [outfile.pos] [rover.obs] [base.21o] [base.21n]
+    
+where `rover.obs` is the rover observation file obtained in the previous step; `[base.21o]` and `[base21n]` are the base station data (see above).
