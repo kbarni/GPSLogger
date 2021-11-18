@@ -10,12 +10,13 @@ Typical application would be to connect a Raspberry Pi Zero W or similar to the 
 
 - Logging of RAW GPS data
 - Web server for live monitoring 
-- Converting the recorded raw data to csv file
+- Performing PPK correction on the recorded raw data
 
 ## Prerequisites
 
 - cmake
 - QT5 (with QSerialPort and QWebSockets modules)
+- (optional) Python3 for the provided utilities
 
 ## Building and installation
 
@@ -54,3 +55,11 @@ The base station data (`[base.21o]` and `[base.21n]`) can be downloaded in Franc
     rnx2rtk -k rtkpost.conf -o [outfile.pos] [rover.obs] [base.21o] [base.21n]
     
 where `rover.obs` is the rover observation file obtained in the previous step; `[base.21o]` and `[base21n]` are the base station data (see above).
+
+## Applying the position data to another file containing timestamps
+
+The `gpssync.py` utility can create positional data in another CSV file containing timestamps. The utility might have to be updated for the structure of the CSV file.
+
+Useage:
+
+    python3 gpssync.py [csvfile.txt] [outfile.pos]
