@@ -62,4 +62,6 @@ The `gpssync.py` utility can create positional data in another CSV file containi
 
 Useage:
 
-    python3 gpssync.py [outfile.pos] [camerafile1.txt] [camerafile2.txt] ... 
+    python3 gpssync.py [--xarm xdist] [--yarm ydist ] [outfile.pos] [camerafile1.txt] [camerafile2.txt] ... 
+
+where `--xarm` and `--yarm` define the lateral and axial distance between the GPS antenna and the camera.

@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 
-import sys
 from datetime import datetime, timedelta
 from dateutil import tz
 from pyproj import Transformer
+import argparse
 import math
 
 def findClosest(sortedarray,val,minindex,maxindex):
@@ -16,10 +16,15 @@ def findClosest(sortedarray,val,minindex,maxindex):
         else:
             return findClosest(sortedarray,val,midindex,maxindex)
 
-if not len(sys.argv)==3:
-    print("Error! incorrect number of arguments!\n\nUseage: ./gpssync.py [gpsfile] [camerafiles]\nwhere camerafile is data.txt and gpsfile is ")
+parser = argparse.ArgumentParser(description='Correction de géolocation des fichiers CSV utilisant un log PPK/RTK.')
+parser.add_argument('--xarm', help='Lateral distance between antenna and camera (positive=right)', action='store', default=0, type=float)
+parser.add_argument('--yarm', help='Axial distance between antenna and camera (positive=ahead)', action='store', default=0, type=float)
+parser.add_argument('gpsfile', metavar='PPK log', help='PPK corrected log file',type=str, nargs=1, action='store')
+parser.add_argument('camfile', metavar='Camera log', help='Raw camera log file',type=str, nargs='+', action='store')
 
-gpsfile = open(sys.argv[1])
+args = parser.parse_args()
+
+gpsfile = open(args.gpsfile[0])
 
 ppkdata = [line.split() for line in gpsfile.readlines()]
 
@@ -33,10 +38,12 @@ yprev = 0
 xref = 0
 yref = 0
 
-xarm = -1 # lateral distance between antenna and camera
-yarm = 1.6 # 
+xarm = args.xarm # lateral distance between antenna and camera
+yarm = args.yarm # 
 
-print("Reading PPK file...")
+print("Using camera/antenna distance {}/{}m".format(xarm,yarm))
+print("------------------------")
+print("Reading PPK file "+args.gpsfile[0])
 
 for data in ppkdata:
     if data[0][0] == '%': 
@@ -66,11 +73,13 @@ xcorr = ycorr = 0
 curyear=ppkdecode[0][0].year
 curmonth=ppkdecode[0][0].month
 curday=ppkdecode[0][0].day
+print()
+print("------------------------")
 
-for filename in sys.argv[2:]:
+for filename in args.camfile:
     camfile = open(filename)
     corrfile = open(filename[:-4]+"_2.txt","w")
-    print("\nProcessing file "+filename)
+    print("Processing file "+filename)
 
     cameradata = [line.split() for line in camfile.readlines()]
     corrfile.write("Image\tLat\tLon\tTimestamp\tParcelle\tSpe\tDist\tX_Lambert\tY_Lambert\n")
@@ -96,3 +105,4 @@ for filename in sys.argv[2:]:
 
     corrfile.close()
     camfile.close()
+    print()
