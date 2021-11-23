@@ -62,4 +62,4 @@ The `gpssync.py` utility can create positional data in another CSV file containi
 
 Useage:
 
-    python3 gpssync.py [csvfile.txt] [outfile.pos]
+    python3 gpssync.py [outfile.pos] [camerafile1.txt] [camerafile2.txt] ... 
