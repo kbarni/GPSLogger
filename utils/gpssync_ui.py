@@ -17,7 +17,7 @@ def findClosest(sortedarray,val,minindex,maxindex):
         else:
             return findClosest(sortedarray,val,midindex,maxindex)
 
-@Gooey
+@Gooey(program_name='GPSSync')
 def main():
     parser = GooeyParser(description='Correction de géolocation des fichiers CSV utilisant un log PPK/RTK.')
     parser.add_argument('--xarm', help='Lateral distance between antenna and camera (positive=right)', action='store', default=0, type=float)
