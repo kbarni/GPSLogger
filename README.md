@@ -58,10 +58,14 @@ where `rover.obs` is the rover observation file obtained in the previous step; `
 
 ## Applying the position data to another file containing timestamps
 
-The `gpssync.py` utility can create positional data in another CSV file containing timestamps. The utility might have to be updated for the structure of the CSV file.
+The `gpssync_ui.py` (with GUI - needs the [Gooey library](https://pypi.org/project/Gooey/)) or `gpssync.py` (command line) utility can create positional data in another CSV file containing timestamps. The utility might have to be updated for the structure of the CSV file.
 
 Useage:
 
+    python3 gpssync_ui.py
+
+or
+    
     python3 gpssync.py [--xarm xdist] [--yarm ydist ] [outfile.pos] [camerafile1.txt] [camerafile2.txt] ... 
 
 where `--xarm` and `--yarm` define the lateral and axial distance between the GPS antenna and the camera.

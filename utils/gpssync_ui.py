@@ -3,6 +3,7 @@
 from datetime import datetime, timedelta
 from dateutil import tz
 from pyproj import Transformer
+from gooey import Gooey,GooeyParser
 import argparse
 import math
 
@@ -16,12 +17,13 @@ def findClosest(sortedarray,val,minindex,maxindex):
         else:
             return findClosest(sortedarray,val,midindex,maxindex)
 
+@Gooey
 def main():
-    parser = argparse.ArgumentParser(description='Correction de géolocation des fichiers CSV utilisant un log PPK/RTK.')
+    parser = GooeyParser(description='Correction de géolocation des fichiers CSV utilisant un log PPK/RTK.')
     parser.add_argument('--xarm', help='Lateral distance between antenna and camera (positive=right)', action='store', default=0, type=float)
     parser.add_argument('--yarm', help='Axial distance between antenna and camera (positive=ahead)', action='store', default=0, type=float)
-    parser.add_argument('gpsfile', metavar='PPK log', help='PPK corrected log file',type=str, nargs=1, action='store')
-    parser.add_argument('camfile', metavar='Camera log', help='Raw camera log file',type=str, nargs='+', action='store')
+    parser.add_argument('gpsfile', metavar='PPK log', help='PPK corrected log file',widget='FileChooser')
+    parser.add_argument('camfile', metavar='Camera log', help='Raw camera log file',widget='FileChooser')
 
     args = parser.parse_args()
 
