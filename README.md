@@ -42,7 +42,7 @@ Useage (Windows PowerShell):
 
     ./correct.ps1 [inputfile.ubx] [base.21o]
 
-The base station data (`[base.21o]` and `[base.21n]`) can be downloaded in France from the [IGN France](rgp.ign.fr/DONNEES/diffusion/) site.
+The base station data (`[base.21o]` and `[base.21n]`) can be downloaded in France from the [IGN France](http://rgp.ign.fr/DONNEES/diffusion/) site.
 
 ### Manual PPK correction
 
